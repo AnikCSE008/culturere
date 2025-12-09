@@ -1,0 +1,29 @@
+name: Patch React2Shell deps
+
+on:
+  workflow_dispatch:
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install patched versions
+        run: |
+          npm install next@15.5.7 react@19.2.1 react-dom@19.2.1
+          npm install -D @types/react@19 @types/react-dom@19
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add package.json package-lock.json
+          git commit -m "Patch React2Shell deps" || echo "No changes to commit"
+          git push
